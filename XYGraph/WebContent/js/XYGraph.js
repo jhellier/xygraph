@@ -1,4 +1,7 @@
-
+/**
+ * This is the XYGraph which will hold all development for exploring what an xygraph can do.
+ * 
+ */
 
 XYGraph = function() {
 	
