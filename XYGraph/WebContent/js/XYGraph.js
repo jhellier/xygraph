@@ -145,6 +145,9 @@ xScale.domain(d3.extent(dataSets[0], function(d) { return d.date; }));
 	  });
   } ) ] );
 
+  //Offers 10 colors that can be accessed by c10(index)
+  // in an iteration calling c10(i) will give you different colors for each step up to 10
+  var c10 = d3.scaleOrdinal(d3.schemeCategory10);
   
   // Called once - same axis works for all data sets
   graph.append("g")
@@ -164,10 +167,11 @@ xScale.domain(d3.extent(dataSets[0], function(d) { return d.date; }));
       .text("Price ($)");
 
   // Called as many times as there are data sets  
-  dataSets.forEach(function(dataSet) {
+  dataSets.forEach(function(dataSet,i) {
 	  graph.append("path")
       .datum(dataSet)
       .attr("class", "line")
+      .style("stroke", c10(i))
       .attr("d", line);
 	  
 
