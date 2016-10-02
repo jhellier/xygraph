@@ -1,6 +1,14 @@
 /**
  * This is the XYGraph which will hold all development for exploring what an xygraph can do.
  * 
+ * 
+ * 
+ *  To Do: 
+ *  
+ *  	1. Handle finding extent for dates over multiple data sets (arrays)
+ *  	2. Convert XYGraph function to handle reading in the formatObject and the cols object
+ *     3.  Handle if the data is provided by files or by a data store
+ * 
  */
 
 XYGraph = function() {
@@ -158,6 +166,11 @@ function plotGraphs(dataSets) {
 xScale.domain(d3.extent(dataSets[0], function(d) { 
 	return d[cols['x']]; 
 	}));
+
+
+// FIXME: Does not handle finding min/max dates over multiple arrays
+// Should work whether the type is date or any other numerical type
+
 
 //xScale.domain(d3.extent(dataSets, function(dataSet) {
 //	return d3.extent(dataSet, function(d) {		
