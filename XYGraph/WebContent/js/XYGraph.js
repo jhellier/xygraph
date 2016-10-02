@@ -8,14 +8,41 @@ XYGraph = function() {
 	var margin = 40,
     width = parseInt(d3.select("#graph").style("width")) - margin*2,
     height = parseInt(d3.select("#graph").style("height")) - margin*2;
+	
 
-var xScale = d3.scaleTime()
-    .range([0, width]);
-    //.nice(d3.time.year);
+	// parse the date / time
+	//var parseTime = d3.timeParse("%Y-%m-%d");
+	var parseTime = d3.timeParse("%d-%b-%y");
+	
+	var formatObject = {
+			"date": parseTime, 
+			"close":Number
+			};
 
-var yScale = d3.scaleLinear()
-    .range([height, 0]);
-    //.nice();
+	var cols =  {	"x":"date", 
+						"y":"close",
+						"xType": d3.scaleTime()	,
+						"yType": d3.scaleLinear()
+						};
+	
+
+//var xScale = d3.scaleTime()
+//    .range([0, width]);
+
+var xScale = cols['xType']
+	.range([0, width]);
+
+
+//.nice(d3.time.year);
+
+//var yScale = d3.scaleLinear()
+//    .range([height, 0]);
+
+var yScale =cols['yType']
+	.range([height, 0]);
+
+
+//.nice();
 
 var line = d3.line()
     .x(function(d) { return xScale(d.date); })
@@ -28,9 +55,7 @@ var graph = d3.select("#graph")
     .attr("transform", "translate(" + margin + "," + margin + ")");
 
 
-// parse the date / time
-//var parseTime = d3.timeParse("%Y-%m-%d");
-var parseTime = d3.timeParse("%d-%b-%y");
+
 
 
 
@@ -94,7 +119,8 @@ function ready(error, results) {
  * 		
  */
 
-var formatObject = {"date": parseTime, "close":Number};
+
+
 
 function formatData(data, formatObject) {
 	for (prop in formatObject) {
@@ -129,7 +155,32 @@ function plotGraphs(dataSets) {
  })	;
  
 
-xScale.domain(d3.extent(dataSets[0], function(d) { return d.date; }));
+xScale.domain(d3.extent(dataSets[0], function(d) { 
+	return d[cols['x']]; 
+	}));
+
+//xScale.domain(d3.extent(dataSets, function(dataSet) {
+//	return d3.extent(dataSet, function(d) {		
+//				return d[cols['x']]; 
+//			})
+//}));
+ 
+ 
+//xScale.domain(d3.min(dataSets, function(dataSet) {
+//							return d3.min(dataSet, function(d) {
+//								return d[cols['x']];
+//							})
+//						}),
+//						d3.max(dataSets, function(dataSet) {
+//							return d3.max(dataSet, function(d) {
+//								return d[cols['x']];
+//							})
+//						})
+//			);
+// 
+//
+
+
  // yScale.domain(d3.extent(data, function(d) { return d.close; }));
 
   
@@ -141,7 +192,7 @@ xScale.domain(d3.extent(dataSets[0], function(d) { return d.date; }));
   
   yScale.domain([0, d3.max(dataSets, function(dataSet) {
 	  return d3.max(dataSet, function(d) {
-		  return d.close;
+		  return d[cols['y']];
 	  });
   } ) ] );
 
