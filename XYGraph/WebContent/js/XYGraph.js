@@ -30,7 +30,9 @@ XYGraph = function() {
 	var cols =  {	"x":"date", 
 						"y":"close",
 						"xType": d3.scaleTime()	,
-						"yType": d3.scaleLinear()
+						"yType": d3.scaleLinear(),
+						"yAxisTitle": "Price ($)",
+						"xAxisTitle": "Date"
 						};
 	
 
@@ -56,11 +58,16 @@ var line = d3.line()
     .x(function(d) { return xScale(d.date); })
     .y(function(d) { return yScale(d.close); });
 
+var xGap = margin + 30;
+var yGap = margin - 30;
+
 var graph = d3.select("#graph")
     .attr("width", width + margin*2)
     .attr("height", height + margin*2)
-  .append("g")
-    .attr("transform", "translate(" + margin + "," + margin + ")");
+   .append("g")
+ .attr("transform", "translate(" + xGap + "," + yGap + ")");
+   
+//    .attr("transform", "translate(" + margin + "," + margin + ")");
 
 
 
@@ -216,19 +223,28 @@ xScale.domain(d3.extent(dataSets[0], function(d) {
   // Called once - same axis works for all data sets
   graph.append("g")
       .attr("class", "x axis")
-      .attr("transform", "translate(0," + height + ")")
-      .call(d3.axisBottom(xScale));
+      .attr("transform", "translate(0," + height  + ")")
+      .call(d3.axisBottom(xScale))
+     .append("text")
+        .attr("id", "xAxisTitle")
+     	.attr("y",-16)
+     	.attr("x", width - 100)
+     	.attr("dy", ".71em")
+     	.style("text-anchor", "end")
+     	.text(cols["xAxisTitle"])
 
   // Called once - same axis works for all data sets
   graph.append("g")
       .attr("class", "y axis")
       .call(d3.axisLeft(yScale))
     .append("text")
+      .attr("id", "yAxisTitle")
       .attr("transform", "rotate(-90)")
       .attr("y", 6)
       .attr("dy", ".71em")
       .style("text-anchor", "end")
-      .text("Price ($)");
+      .text(cols["yAxisTitle"]);
+//      .text("Price ($)");
 
   // Called as many times as there are data sets  
   dataSets.forEach(function(dataSet,i) {
@@ -259,6 +275,10 @@ xScale.domain(d3.extent(dataSets[0], function(d) {
     graph.select('.x.axis')
       .attr("transform", "translate(0," + height + ")")
       .call(d3.axisBottom(xScale));
+    
+    
+      d3.select("#xAxisTitle")
+      .attr("x", width - 100);
 
     graph.select('.y.axis')
       .call(d3.axisLeft(yScale));
