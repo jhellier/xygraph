@@ -220,11 +220,14 @@ xScale.domain(d3.extent(dataSets[0], function(d) {
   // in an iteration calling c10(i) will give you different colors for each step up to 10
   var c10 = d3.scaleOrdinal(d3.schemeCategory10);
   
+  var xAxis = d3.axisBottom(xScale);
+  var yAxis = d3.axisLeft(yScale);
+  
   // Called once - same axis works for all data sets
   graph.append("g")
       .attr("class", "x axis")
       .attr("transform", "translate(0," + height  + ")")
-      .call(d3.axisBottom(xScale))
+      .call(xAxis)
      .append("text")
         .attr("id", "xAxisTitle")
      	.attr("y",-16)
@@ -236,7 +239,7 @@ xScale.domain(d3.extent(dataSets[0], function(d) {
   // Called once - same axis works for all data sets
   graph.append("g")
       .attr("class", "y axis")
-      .call(d3.axisLeft(yScale))
+      .call(yAxis)
     .append("text")
       .attr("id", "yAxisTitle")
       .attr("transform", "rotate(-90)")
@@ -271,17 +274,23 @@ xScale.domain(d3.extent(dataSets[0], function(d) {
     xScale.range([0, width]);
     yScale.range([height, 0]);
 
+    xAxis.ticks(Math.max(width/50, 2));
+    yAxis.ticks(Math.max(height/50, 2));
+    
     /* Update the axis with the new scale */
     graph.select('.x.axis')
       .attr("transform", "translate(0," + height + ")")
-      .call(d3.axisBottom(xScale));
+      .call(xAxis);
     
     
       d3.select("#xAxisTitle")
       .attr("x", width - 100);
 
+      
     graph.select('.y.axis')
-      .call(d3.axisLeft(yScale));
+      .call(yAxis);
+    
+    
 
     /* Force D3 to recalculate and update the line */
     graph.selectAll('.line')
