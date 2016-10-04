@@ -62,7 +62,7 @@ var xGap = margin + 30;
 var yGap = margin - 30;
 
 var graph = d3.select("#graph")
-    .attr("width", width + margin*2)
+    .attr("width", width)
     .attr("height", height + margin*2)
    .append("g")
  .attr("transform", "translate(" + xGap + "," + yGap + ")");
@@ -267,7 +267,7 @@ xScale.domain(d3.extent(dataSets[0], function(d) {
 //      .attr("d", line);
 
   function resize() {
-    var width = parseInt(d3.select("#graph").style("width")) - margin*2,
+    var width = parseInt(d3.select("#graph").style("width")) - margin*3,
     height = parseInt(d3.select("#graph").style("height")) - margin*2;
 
     /* Update the range of the scale with new width/height */
