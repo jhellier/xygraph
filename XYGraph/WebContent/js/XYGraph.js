@@ -6,8 +6,13 @@
  *  To Do: 
  *  
  *  	1. Handle finding extent for dates over multiple data sets (arrays)
- *  	2. Convert XYGraph function to handle reading in the formatObject and the cols object
- *     3.  Handle if the data is provided by files or by a data store
+ *     2.  Handle if the data is provided by files or by a data store
+ *     3. Set up axis title so that it can be centered and larger font
+ *     4. Keep up the code so that it is cleanly callable and configurable
+ *     5. Add highlight capability
+ *     6. Think about the design: Simple, function add-ons and more complex
+ *     7. What are the qualities of a simple graph, a complex one?
+ *     8. Handle various data types.
  * 
  */
 
