@@ -5,10 +5,10 @@
  * 
  *  To Do: 
  *  
- *  	1. Handle finding extent for dates over multiple data sets (arrays)
+ *  	1. Handle finding extent for dates over multiple data sets (arrays) FIXED
  *     2.  Handle if the data is provided by files or by a data store
  *     3. Set up axis title so that it can be centered and larger font
- *     4. Keep up the code so that it is cleanly callable and configurable
+ *     4. Clean up the code so that it is cleanly callable and configurable
  *     5. Add highlight capability
  *     6. Think about the design: Simple, function add-ons and more complex
  *     7. What are the qualities of a simple graph, a complex one?
@@ -175,9 +175,9 @@ function plotGraphs(dataSets) {
  })	;
  
 
-xScale.domain(d3.extent(dataSets[0], function(d) { 
-	return d[cols['x']]; 
-	}));
+//xScale.domain(d3.extent(dataSets[0], function(d) { 
+//	return d[cols['x']]; 
+//	}));
 
 
 // FIXME: Does not handle finding min/max dates over multiple arrays
@@ -191,19 +191,19 @@ xScale.domain(d3.extent(dataSets[0], function(d) {
 //}));
  
  
-//xScale.domain(d3.min(dataSets, function(dataSet) {
-//							return d3.min(dataSet, function(d) {
-//								return d[cols['x']];
-//							})
-//						}),
-//						d3.max(dataSets, function(dataSet) {
-//							return d3.max(dataSet, function(d) {
-//								return d[cols['x']];
-//							})
-//						})
-//			);
-// 
-//
+xScale.domain([d3.min(dataSets, function(dataSet) {
+							return d3.min(dataSet, function(d) {
+								return d[cols['x']];
+							})
+						}),
+						d3.max(dataSets, function(dataSet) {
+							return d3.max(dataSet, function(d) {
+								return d[cols['x']];
+							})
+						})
+			]);
+ 
+
 
 
  // yScale.domain(d3.extent(data, function(d) { return d.close; }));
