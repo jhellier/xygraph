@@ -24,7 +24,6 @@ XYGraph = function() {
 	
 
 	// parse the date / time
-	//var parseTime = d3.timeParse("%Y-%m-%d");
 	var parseTime = d3.timeParse("%d-%b-%y");
 	
 	var formatObject = {
@@ -40,24 +39,15 @@ XYGraph = function() {
 						"xAxisTitle": "Date"
 						};
 	
-
-//var xScale = d3.scaleTime()
-//    .range([0, width]);
-
+// cols['xType'] puts in the appropriate d3 class for scale like d3.scaleTime if the axis is dates
 var xScale = cols['xType']
 	.range([0, width]);
 
-
+// Use nice to round off the tick text to a nice round number
 //.nice(d3.time.year);
-
-//var yScale = d3.scaleLinear()
-//    .range([height, 0]);
 
 var yScale =cols['yType']
 	.range([height, 0]);
-
-
-//.nice();
 
 var line = d3.line()
     .x(function(d) { return xScale(d.date); })
@@ -71,12 +61,6 @@ var graph = d3.select("#graph")
     .attr("height", height + margin*2)
    .append("g")
  .attr("transform", "translate(" + xGap + "," + yGap + ")");
-   
-//    .attr("transform", "translate(" + margin + "," + margin + ")");
-
-
-
-
 
 
 /*
@@ -164,34 +148,13 @@ function formatData(data, formatObject) {
 
 function plotGraphs(dataSets) {
 	
-	
- dataSets.forEach(function(dataSet) {
-	 dataSet.forEach(function(d) {
-			formatData(d, formatObject);  
-		    //d.date = parseTime(d.date);
-		    //d.close = +d.close;
-		  });
-	 
- })	;
- 
-
-//xScale.domain(d3.extent(dataSets[0], function(d) { 
-//	return d[cols['x']]; 
-//	}));
-
-
-// FIXME: Does not handle finding min/max dates over multiple arrays
-// Should work whether the type is date or any other numerical type
-
-
-//xScale.domain(d3.extent(dataSets, function(dataSet) {
-//	return d3.extent(dataSet, function(d) {		
-//				return d[cols['x']]; 
-//			})
-//}));
- 
- 
-xScale.domain([d3.min(dataSets, function(dataSet) {
+		dataSets.forEach(function(dataSet) {
+			dataSet.forEach(function(d) {
+				formatData(d, formatObject);
+			});
+		});
+  
+ 		xScale.domain([d3.min(dataSets, function(dataSet) {
 							return d3.min(dataSet, function(d) {
 								return d[cols['x']];
 							})
@@ -203,23 +166,12 @@ xScale.domain([d3.min(dataSets, function(dataSet) {
 						})
 			]);
  
-
-
-
- // yScale.domain(d3.extent(data, function(d) { return d.close; }));
-
   
-//  xScale.domain([0, d3.max(dataSets, function(dataSet) {
-//	  return d3.max(dataSet, function(d) {
-//		  return d.date;
-//	  });
-//  } ) ] );
-  
-  yScale.domain([0, d3.max(dataSets, function(dataSet) {
-	  return d3.max(dataSet, function(d) {
-		  return d[cols['y']];
-	  });
-  } ) ] );
+		  yScale.domain([0, d3.max(dataSets, function(dataSet) {
+			  return d3.max(dataSet, function(d) {
+				  return d[cols['y']];
+			  });
+		  } ) ] );
 
   //Offers 10 colors that can be accessed by c10(index)
   // in an iteration calling c10(i) will give you different colors for each step up to 10
@@ -252,7 +204,6 @@ xScale.domain([d3.min(dataSets, function(dataSet) {
       .attr("dy", ".71em")
       .style("text-anchor", "end")
       .text(cols["yAxisTitle"]);
-//      .text("Price ($)");
 
   // Called as many times as there are data sets  
   dataSets.forEach(function(dataSet,i) {
@@ -261,16 +212,9 @@ xScale.domain([d3.min(dataSets, function(dataSet) {
       .attr("class", "line")
       .style("stroke", c10(i))
       .attr("d", line);
-	  
-
   });
-  
-//  
-//  graph.append("path")
-//      .datum(data)
-//      .attr("class", "line")
-//      .attr("d", line);
 
+  
   function resize() {
     var width = parseInt(d3.select("#graph").style("width")) - margin*3,
     height = parseInt(d3.select("#graph").style("height")) - margin*2;
