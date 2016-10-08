@@ -5,7 +5,7 @@
  * 
  *  To Do: 
  *  
- *  	1. Handle finding extent for dates over multiple data sets (arrays) FIXED
+ *     1. Handle finding extent for dates over multiple data sets (arrays) FIXED
  *     2.  Handle if the data is provided by files or by a data store
  *     3. Set up axis title so that it can be centered and larger font
  *     4. Clean up the code so that it is cleanly callable and configurable
@@ -16,28 +16,14 @@
  * 
  */
 
-XYGraph = function() {
+XYGraph = function(metaData, dataSets) {
+
+	var formatObject = metaData.formatObject;
+	var cols = metaData.cols;
 	
 	var margin = 40,
     width = parseInt(d3.select("#graph").style("width")) - margin*2,
     height = parseInt(d3.select("#graph").style("height")) - margin*2;
-	
-
-	// parse the date / time
-	var parseTime = d3.timeParse("%d-%b-%y");
-	
-	var formatObject = {
-			"date": parseTime, 
-			"close":Number
-			};
-
-	var cols =  {	"x":"date", 
-						"y":"close",
-						"xType": d3.scaleTime()	,
-						"yType": d3.scaleLinear(),
-						"yAxisTitle": "Price ($)",
-						"xAxisTitle": "Date"
-						};
 	
 // cols['xType'] puts in the appropriate d3 class for scale like d3.scaleTime if the axis is dates
 var xScale = cols['xType']
@@ -63,24 +49,7 @@ var graph = d3.select("#graph")
  .attr("transform", "translate(" + xGap + "," + yGap + ")");
 
 
-/*
- * Handles reading in as many data sets are you want. The data sets have to be of the same of number of columns and types
- * 
- */
-var dataSets = [];
 
-d3.queue()
-	.defer(d3.csv, "data/data.csv")
-	.defer(d3.csv, "data/data2.csv")
-	.awaitAll(ready);
-
-function ready(error, results) {
-	results.forEach(function(array) {
-		dataSets.push(array);
-	});
-	console.dir(dataSets);	
-	plotGraphs(dataSets);
-}
 
 /**
  * Convert data. Any column that needs to be formated in any way.
@@ -146,7 +115,7 @@ function formatData(data, formatObject) {
 
 //d3.csv("data/data.csv", function(error, data) {
 
-function plotGraphs(dataSets) {
+function plotGraphs() {
 	
 		dataSets.forEach(function(dataSet) {
 			dataSet.forEach(function(d) {
@@ -250,7 +219,52 @@ function plotGraphs(dataSets) {
 
   resize();
 };
+
+
+return  {
+	plotGraph: function() {
+		plotGraphs();
+	}
+	
+}
 	
 };
 
-new XYGraph();
+
+//parse the date / time
+var parseTime = d3.timeParse("%d-%b-%y");
+
+var formatObject = {
+		"date": parseTime, 
+		"close":Number
+		};
+
+var cols =  {	"x":"date", 
+					"y":"close",
+					"xType": d3.scaleTime()	,
+					"yType": d3.scaleLinear(),
+					"yAxisTitle": "Price ($)",
+					"xAxisTitle": "Date"
+					};
+
+
+
+var metaData = {};
+var dataSets = [];
+
+metaData.cols = cols;
+metaData.formatObject = formatObject;
+
+d3.queue()
+	.defer(d3.csv, "data/data.csv")
+	.defer(d3.csv, "data/data2.csv")
+	.awaitAll(ready);
+
+function ready(error, results) {
+	results.forEach(function(array) {
+		dataSets.push(array);
+	});
+	console.dir(dataSets);	
+	new XYGraph(metaData, dataSets).plotGraph();
+}
+
