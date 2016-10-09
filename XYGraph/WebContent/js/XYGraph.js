@@ -54,13 +54,13 @@
  * 
  */
 
-XYGraph = function(metaData, dataSets, margin, gap) {
+XYGraph = function(divPanelTag, metaData, dataSets, margin, gap) {
 
 	var formatObject = metaData.formatObject;
 	var cols = metaData.cols;
 	
-    width = parseInt(d3.select("#graph").style("width")) - margin*2,
-    height = parseInt(d3.select("#graph").style("height")) - margin*2;
+    width = parseInt(d3.select(divPanelTag).style("width")) - margin*2,
+    height = parseInt(d3.select(divPanelTag).style("height")) - margin*2;
 	
 // cols['xType'] puts in the appropriate d3 class for scale like d3.scaleTime if the axis is dates
 var xScale = cols['xType']
@@ -79,7 +79,7 @@ var line = d3.line()
 var xGap = margin + gap;
 var yGap = margin - gap;
 
-var graph = d3.select("#graph")
+var graph = d3.select(divPanelTag)
     .attr("width", width)
     .attr("height", height + margin*2)
    .append("g")
@@ -165,8 +165,8 @@ function plotGraphs() {
    * Recalculates the graph to fit properly in whatever size the containing window is
    */
   function resize() {
-    var width = parseInt(d3.select("#graph").style("width")) - margin*3,
-    height = parseInt(d3.select("#graph").style("height")) - margin*2;
+    var width = parseInt(d3.select(divPanelTag).style("width")) - margin*3,
+    height = parseInt(d3.select(divPanelTag).style("height")) - margin*2;
 
     /* Update the range of the scale with new width/height */
     xScale.range([0, width]);
@@ -243,6 +243,6 @@ function ready(error, results) {
 		dataSets.push(array);
 	});
 	console.dir(dataSets);	
-	new XYGraph(metaData, dataSets, 40, 30).plotGraph();
+	new XYGraph("#graph", metaData, dataSets, 40, 30).plotGraph();
 }
 
