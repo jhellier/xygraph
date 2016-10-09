@@ -69,12 +69,12 @@ var xScale = cols['xType']
 // Use nice to round off the tick text to a nice round number
 //.nice(d3.time.year);
 
-var yScale =cols['yType']
+var yScale = cols['yType']
 	.range([height, 0]);
 
 var line = d3.line()
-    .x(function(d) { return xScale(d.date); })
-    .y(function(d) { return yScale(d.close); });
+    .x(function(d) { return xScale(d[cols['x']]); })
+    .y(function(d) { return yScale(d[cols['y']]); });
 
 var xGap = margin + gap;
 var yGap = margin - gap;
