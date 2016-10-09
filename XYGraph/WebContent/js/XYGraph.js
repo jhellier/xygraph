@@ -1,57 +1,6 @@
 /**
  * This is the XYGraph which will hold all development for exploring what an xygraph can do.
  * 
- * 
- * 
- *  To Do: 
- *  
- *     1. Handle finding extent for dates over multiple data sets (arrays) FIXED
- *     2.  Handle if the data is provided by files or by a data store
- *     3. Set up axis title so that it can be centered and larger font
- *     4. Clean up the code so that it is cleanly callable and configurable
- *     5. Add highlight capability
- *     6. Think about the design: Simple, function add-ons and more complex
- *     7. What are the qualities of a simple graph, a complex one?
- *     8. Handle various data types.
- * 
- */
-
-XYGraph = function(metaData, dataSets) {
-
-	var formatObject = metaData.formatObject;
-	var cols = metaData.cols;
-	
-	var margin = 40,
-    width = parseInt(d3.select("#graph").style("width")) - margin*2,
-    height = parseInt(d3.select("#graph").style("height")) - margin*2;
-	
-// cols['xType'] puts in the appropriate d3 class for scale like d3.scaleTime if the axis is dates
-var xScale = cols['xType']
-	.range([0, width]);
-
-// Use nice to round off the tick text to a nice round number
-//.nice(d3.time.year);
-
-var yScale =cols['yType']
-	.range([height, 0]);
-
-var line = d3.line()
-    .x(function(d) { return xScale(d.date); })
-    .y(function(d) { return yScale(d.close); });
-
-var xGap = margin + 30;
-var yGap = margin - 30;
-
-var graph = d3.select("#graph")
-    .attr("width", width)
-    .attr("height", height + margin*2)
-   .append("g")
- .attr("transform", "translate(" + xGap + "," + yGap + ")");
-
-
-
-
-/**
  * Convert data. Any column that needs to be formated in any way.
  * takes in an array and an object that describes each columns format
  * that needs to be formated. 
@@ -90,10 +39,51 @@ var graph = d3.select("#graph")
  *     		d[prop] = ft[prop](d[prop]);
  *     }
  * 		
+ * 
+ * 
+ *  To Do: 
+ *  
+ *     1. Handle finding extent for dates over multiple data sets (arrays) FIXED
+ *     2.  Handle if the data is provided by files or by a data store
+ *     3. Set up axis title so that it can be centered and larger font
+ *     4. Clean up the code so that it is cleanly callable and configurable
+ *     5. Add highlight capability
+ *     6. Think about the design: Simple, function add-ons and more complex
+ *     7. What are the qualities of a simple graph, a complex one?
+ *     8. Handle various data types.
+ * 
  */
 
+XYGraph = function(metaData, dataSets, margin, gap) {
 
+	var formatObject = metaData.formatObject;
+	var cols = metaData.cols;
+	
+    width = parseInt(d3.select("#graph").style("width")) - margin*2,
+    height = parseInt(d3.select("#graph").style("height")) - margin*2;
+	
+// cols['xType'] puts in the appropriate d3 class for scale like d3.scaleTime if the axis is dates
+var xScale = cols['xType']
+	.range([0, width]);
 
+// Use nice to round off the tick text to a nice round number
+//.nice(d3.time.year);
+
+var yScale =cols['yType']
+	.range([height, 0]);
+
+var line = d3.line()
+    .x(function(d) { return xScale(d.date); })
+    .y(function(d) { return yScale(d.close); });
+
+var xGap = margin + gap;
+var yGap = margin - gap;
+
+var graph = d3.select("#graph")
+    .attr("width", width)
+    .attr("height", height + margin*2)
+   .append("g")
+ .attr("transform", "translate(" + xGap + "," + yGap + ")");
 
 function formatData(data, formatObject) {
 	for (prop in formatObject) {
@@ -101,19 +91,6 @@ function formatData(data, formatObject) {
 	}
 }
 
-
-/**
- * Convert to handle multiple curves
- * 
- * Use the queue to read in the files
- * 
- * Break out the function calls that handle individual data sets
- *  generate a domain across all data sets
- *  Don't assume that one axis has the same domain across all data sets like date might but not absolute
- *  run the call to create the graph line for each data set.
- */
-
-//d3.csv("data/data.csv", function(error, data) {
 
 function plotGraphs() {
 	
@@ -183,7 +160,10 @@ function plotGraphs() {
       .attr("d", line);
   });
 
-  
+
+  /**
+   * Recalculates the graph to fit properly in whatever size the containing window is
+   */
   function resize() {
     var width = parseInt(d3.select("#graph").style("width")) - margin*3,
     height = parseInt(d3.select("#graph").style("height")) - margin*2;
@@ -200,23 +180,21 @@ function plotGraphs() {
       .attr("transform", "translate(0," + height + ")")
       .call(xAxis);
     
-    
       d3.select("#xAxisTitle")
       .attr("x", width - 100);
-
       
     graph.select('.y.axis')
       .call(yAxis);
     
-    
-
     /* Force D3 to recalculate and update the line */
     graph.selectAll('.line')
       .attr("d", line);
   }
 
+  // Any resize of the main browser will fire a resize event and call resize
   d3.select(window).on('resize', resize); 
 
+  // Upon initial load of this script execute a resize
   resize();
 };
 
@@ -265,6 +243,6 @@ function ready(error, results) {
 		dataSets.push(array);
 	});
 	console.dir(dataSets);	
-	new XYGraph(metaData, dataSets).plotGraph();
+	new XYGraph(metaData, dataSets, 40, 30).plotGraph();
 }
 
