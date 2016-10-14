@@ -1,5 +1,5 @@
 /**
- * This is the XYGraph which will hold all development for exploring what an xygraph can do.
+ * XYGraph - Simple xy graph that can be extended
  * 
  * Convert data. Any column that needs to be formated in any way.
  * takes in an array and an object that describes each columns format
@@ -79,6 +79,8 @@ XYGraph = function (divPanelTag, metaData, dataSets, margin, gap) {
  var yGap = margin - gap;
  
  var graph = d3.select(divPanelTag)
+      .append("svg")
+      .attr("class","graph")
       .attr("width", width)
       .attr("height", height + margin * 2)
       .append("g")
@@ -90,7 +92,7 @@ XYGraph = function (divPanelTag, metaData, dataSets, margin, gap) {
 function plotGraphs() {
     
     // Remove any old graph lines
-    d3.selectAll(".line").remove()
+    d3.selectAll(divPanelTag + " .line").remove()
   
          xScale.domain([d3.min(dataSets, function (dataSet) {
                             return d3.min(dataSet, function (d) {
@@ -172,14 +174,14 @@ function plotGraphs() {
       .attr("transform", "translate(0," + height + ")")
       .call(xAxis);
     
-      d3.select("#xAxisTitle")
+      d3.select(divPanelTag + " #xAxisTitle")
       .attr("x", width - 100);
       
-    graph.select('.y.axis')
+    graph.select(divPanelTag + ' .y.axis')
       .call(yAxis);
     
     /* Force D3 to recalculate and update the line */
-    graph.selectAll('.line')
+    graph.selectAll(divPanelTag + ' .line')
       .attr("d", line);
   }
 
@@ -262,6 +264,7 @@ function ready(error, results) {
         });
     });
     
-    xyGraph = new XYGraph("#graph", metaData, dataSets, 40, 30).plotGraph();
+    xyGraph = new XYGraph("#graphPanel1", metaData, dataSets, 40, 30).plotGraph();
+   // xyGraph1 = new XYGraph("#graph2", metaData, dataSets, 40, 30).plotGraph();
 }
 

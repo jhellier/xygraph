@@ -33,9 +33,26 @@ body {
   stroke-width: 1.5px;
 }
 
-#graph {
+.graphPanel {
+	width: 100%;
+	height: 50%;
+}
+
+
+#otherPanel {
+	width: 100%;
+	height: 50%;
+	background-color: blue;
+}
+
+#mainPanel {
+	width: 100%;
+	height: 90%;
+}
+
+.graph {
   background-color: black;	
   width: 100%;
-  height: 90%;
+  height: 50%;
   position: absolute;
 }
