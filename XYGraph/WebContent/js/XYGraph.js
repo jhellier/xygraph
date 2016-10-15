@@ -94,7 +94,6 @@ XYGraph = function (divPanelTag, metaData, dataSets, margin, gap) {
   * Recalculates the graph to fit properly in whatever size the containing window is
   */
  function resize(what) {
-     console.log(" tag " + divPanelTag);
    var width = parseInt(d3.select(divPanelTag).style("width")) - margin * 3,
    height = parseInt(d3.select(divPanelTag).style("height")) - margin * 2;
 
@@ -104,6 +103,9 @@ XYGraph = function (divPanelTag, metaData, dataSets, margin, gap) {
 
    xAxis.ticks(Math.max(width / 50, 2));
    yAxis.ticks(Math.max(height / 50, 2));
+
+   d3.selectAll(".graph").attr("height", height + margin);
+   d3.selectAll(".graph").attr("width", width + (margin * 2));
    
    /* Update the axis with the new scale */
    graph.select(divPanelTag + ' .x.axis')
