@@ -285,5 +285,6 @@ function ready(error, results) {
     
     xyGraph1 = new XYGraph("#graphPanel1", metaData, dataSets, 40, 30);
     xyGraph2 = new XYGraph("#graphPanel2", metaData, dataSets, 40, 30);
+    xyGraph2 = new XYGraph("#graphPanel3", metaData, dataSets, 40, 30);
 }
 
