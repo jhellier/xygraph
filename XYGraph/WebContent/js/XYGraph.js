@@ -58,7 +58,9 @@ XYGraph = function (divPanelTag, metaData, dataSets, margin, gap) {
     var formatObject = metaData.formatObject,
         cols = metaData.cols,   
         width = parseInt(d3.select(divPanelTag).style("width"), 10) - margin * 2,
-        height = parseInt(d3.select(divPanelTag).style("height"), 10) - margin * 2;
+        height = parseInt(d3.select(divPanelTag).style("height"), 10) - margin * 2,
+        xAxis,
+        yAxis;
     
  // cols['xType'] puts in the appropriate d3 class for scale like d3.scaleTime if
  // the axis is dates
@@ -88,6 +90,36 @@ XYGraph = function (divPanelTag, metaData, dataSets, margin, gap) {
 
 
 
+ /**
+  * Recalculates the graph to fit properly in whatever size the containing window is
+  */
+ function resize(what) {
+     console.log(" tag " + divPanelTag);
+   var width = parseInt(d3.select(divPanelTag).style("width")) - margin * 3,
+   height = parseInt(d3.select(divPanelTag).style("height")) - margin * 2;
+
+   /* Update the range of the scale with new width/height */
+   xScale.range([0, width]);
+   yScale.range([height, 0]);
+
+   xAxis.ticks(Math.max(width / 50, 2));
+   yAxis.ticks(Math.max(height / 50, 2));
+   
+   /* Update the axis with the new scale */
+   graph.select(divPanelTag + ' .x.axis')
+     .attr("transform", "translate(0," + height + ")")
+     .call(xAxis);
+   
+     d3.select(divPanelTag + " #xAxisTitle")
+     .attr("x", width - 100);
+     
+   graph.select(divPanelTag + ' .y.axis')
+     .call(yAxis);
+   
+   /* Force D3 to recalculate and update the line */
+   graph.selectAll(divPanelTag + ' .line')
+     .attr("d", line);
+ };
 
 function plotGraphs() {
     
@@ -117,8 +149,8 @@ function plotGraphs() {
   // in an iteration calling c10(i) will give you different colors for each step up to 10
   var c10 = d3.scaleOrdinal(d3.schemeCategory10);
   
-  var xAxis = d3.axisBottom(xScale);
-  var yAxis = d3.axisLeft(yScale);
+  xAxis = d3.axisBottom(xScale);
+  yAxis = d3.axisLeft(yScale);
   
   // Called once - same axis works for all data sets
   graph.append("g")
@@ -155,42 +187,23 @@ function plotGraphs() {
   });
 
 
-  /**
-   * Recalculates the graph to fit properly in whatever size the containing window is
-   */
-  function resize() {
-    var width = parseInt(d3.select(divPanelTag).style("width")) - margin * 3,
-    height = parseInt(d3.select(divPanelTag).style("height")) - margin * 2;
-
-    /* Update the range of the scale with new width/height */
-    xScale.range([0, width]);
-    yScale.range([height, 0]);
-
-    xAxis.ticks(Math.max(width / 50, 2));
-    yAxis.ticks(Math.max(height / 50, 2));
-    
-    /* Update the axis with the new scale */
-    graph.select('.x.axis')
-      .attr("transform", "translate(0," + height + ")")
-      .call(xAxis);
-    
-      d3.select(divPanelTag + " #xAxisTitle")
-      .attr("x", width - 100);
-      
-    graph.select(divPanelTag + ' .y.axis')
-      .call(yAxis);
-    
-    /* Force D3 to recalculate and update the line */
-    graph.selectAll(divPanelTag + ' .line')
-      .attr("d", line);
-  }
 
   // Any resize of the main browser will fire a resize event and call resize
-  d3.select(window).on('resize', resize); 
+  // This does not work. It only resizes the last graph created. The rest of the graphs do not resize. It only
+  // calls resize once for the last graph instance. 
+  //d3.select(window).on('resize', resize); 
+  
+  // Handles resizing all the graphs when the window resizes. 
+  window.addEventListener("resize", resize);
 
   // Upon initial load of this script execute a resize
   resize();
+  
+  return this;
+  
 };
+
+plotGraphs();
 
 
 return  {
@@ -199,12 +212,17 @@ return  {
         return this;
     },
     
-    setDataSets(newDataSets) {
+    setDataSets: function(newDataSets) {
         dataSets = newDataSets;
     },
     
-    getDataSets() {
+    getDataSets: function() {
         return dataSets;
+    },
+    
+    resize: function() {
+        resize();
+        return;
     }
     
     
@@ -235,7 +253,8 @@ var cols = {
 
  var metaData = {},
     dataSets = [],
-          xyGraph;
+          xyGraph1,
+          xyGraph2;
 
 metaData.cols = cols;
 metaData.formatObject = formatObject;
@@ -264,7 +283,7 @@ function ready(error, results) {
         });
     });
     
-    xyGraph = new XYGraph("#graphPanel1", metaData, dataSets, 40, 30).plotGraph();
-   // xyGraph1 = new XYGraph("#graph2", metaData, dataSets, 40, 30).plotGraph();
+    xyGraph1 = new XYGraph("#graphPanel1", metaData, dataSets, 40, 30);
+    xyGraph2 = new XYGraph("#graphPanel2", metaData, dataSets, 40, 30);
 }
 
