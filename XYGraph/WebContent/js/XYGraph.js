@@ -90,6 +90,7 @@ XYGraph = function (divPanelTag, metaData, dataSets, margin, gap) {
 
 
 
+
  /**
   * Recalculates the graph to fit properly in whatever size the containing window is
   */
@@ -270,6 +271,24 @@ function formatData(data, formatObject) {
     for (prop in formatObject) {
         data[prop] = formatObject[prop](data[prop]);
     }
+}
+
+
+d3.select("#toggle").on("click", function() {
+    toggleGraphOrientation();
+});
+
+function toggleGraphOrientation() {
+    
+    var orientation = d3.selectAll(".graphPanelVert");
+    if (orientation.size()  != 0) {
+        d3.selectAll(".graphPanelVert").attr("class", "graphPanelHorz");
+    } else {
+        d3.selectAll(".graphPanelHorz").attr("class", "graphPanelVert");
+    }
+    
+    window.dispatchEvent(new Event('resize'));
+    
 }
 
 
