@@ -37,7 +37,7 @@ metaData.formatObject = formatObject;
 
 /**
  *  This is a nifty way to read in any number of source data files in any format and once they are all read in then you
- *  can call a function to process them.  IN this case a function ready is called. Ready accesses two parameters one, an error
+ *  can call a function to process them.  In this case a function ready is called. Ready accepts two parameters the first, an error
  *  and the other is results. Results is an array that holds the datasets. Easy to then step through the array of results to access
  *  each data set retrieved.
  */

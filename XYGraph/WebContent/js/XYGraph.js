@@ -200,10 +200,9 @@ function plotGraphs() {
   window.addEventListener("resize", resize);
 
   // Upon initial load of this script execute a resize
+  // This will causes the graph to be properly fit in the current window size
   resize();
-  
-  return this;
-  
+ 
 };
 
 plotGraphs();
@@ -225,7 +224,7 @@ return  {
     
     resize: function() {
         resize();
-        return;
+        return this;
     }
     
     
