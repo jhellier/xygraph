@@ -186,8 +186,11 @@ function plotGraphs() {
       .datum(dataSet)
       .attr("class", "line")
       .style("stroke", c10(i))
-      .attr("d", line);
-  });
+      .attr("d", line)
+      .on("mouseover", function() {
+          console.log(yScale.invert(d3.mouse(this)[1]) + "," + xScale.invert(d3.mouse(this)[0]));
+      });
+  })
 
 
 
@@ -205,6 +208,7 @@ function plotGraphs() {
  
 };
 
+// Call plotGraphs to start things off
 plotGraphs();
 
 

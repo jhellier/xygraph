@@ -52,6 +52,9 @@ function formatData(data, formatObject) {
     }
 }
 
+d3.selectAll(".line").on("click", function() {
+    console.log("Clicked in the graph");
+});
 
 d3.select("#toggle").on("click", function() {
     toggleGraphOrientation();
@@ -84,7 +87,7 @@ function ready(error, results) {
     });
     
     xyGraph1 = new XYGraph("#graphPanel1", metaData, dataSets, 40, 30);
-    xyGraph2 = new XYGraph("#graphPanel2", metaData, dataSets, 40, 30);
-    xyGraph2 = new XYGraph("#graphPanel3", metaData, dataSets, 40, 30);
+   // xyGraph2 = new XYGraph("#graphPanel2", metaData, dataSets, 40, 30);
+   // xyGraph2 = new XYGraph("#graphPanel3", metaData, dataSets, 40, 30);
 }
 
