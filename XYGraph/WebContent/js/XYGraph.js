@@ -77,6 +77,13 @@ XYGraph = function (divPanelTag, metaData, dataSets, margin, gap) {
      .x(function (d) { return xScale(d[cols.x]); })
      .y(function (d) { return yScale(d[cols.y]); });
  
+ 
+ var area = d3.area()
+     .x(function(d) {  return xScale(d[cols.x]); })
+     .y0(height - 2)
+     .y1(0)
+     //.y1(function(d) { return yScale(d[cols.y]); });
+ 
  var xGap = margin + gap;
  var yGap = margin - gap;
  
@@ -122,6 +129,11 @@ XYGraph = function (divPanelTag, metaData, dataSets, margin, gap) {
    /* Force D3 to recalculate and update the line */
    graph.selectAll(divPanelTag + ' .line')
      .attr("d", line);
+   
+   /* Force D3 to recalculate and update the area */
+   graph.selectAll(divPanelTag + ' .area')
+     .attr("d", area);
+   
  };
 
 function plotGraphs() {
@@ -179,6 +191,16 @@ function plotGraphs() {
       .attr("dy", ".71em")
       .style("text-anchor", "end")
       .text(cols.yAxisTitle);
+  
+  dataSets.forEach(function (dataSet,i) {
+      graph.append("path")
+      .datum(dataSet)
+      .attr("class", "area")
+      .attr("d", area)
+      .on("mouseover", function() {
+          //console.log(yScale.invert(d3.mouse(this)[1]) + "," + xScale.invert(d3.mouse(this)[0]));
+      });
+  })
 
   // Called as many times as there are data sets  
   dataSets.forEach(function (dataSet,i) {
@@ -192,6 +214,20 @@ function plotGraphs() {
       });
   })
 
+
+  
+//  dataSets.forEach(function (dataSet,i) {
+//      graph.append("circle")
+//      .datum(dataSet)
+//      .attr("class", "dot")
+//      
+//      .style("stroke", c10(i))
+//      .attr("d", line)
+//      .on("mouseover", function() {
+//          console.log(yScale.invert(d3.mouse(this)[1]) + "," + xScale.invert(d3.mouse(this)[0]));
+//      });
+//  })
+  
 
 
   // Any resize of the main browser will fire a resize event and call resize

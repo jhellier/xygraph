@@ -52,8 +52,9 @@ function formatData(data, formatObject) {
     }
 }
 
-d3.selectAll(".line").on("click", function() {
-    console.log("Clicked in the graph");
+d3.select(".area").on("click", function() {
+    console.log("Clicked in the graph x: " + d3.mouse(this)[0] + " y: " + d3.mouse(this)[1]);
+    
 });
 
 d3.select("#toggle").on("click", function() {

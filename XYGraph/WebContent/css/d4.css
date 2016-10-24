@@ -1,7 +1,7 @@
 body {
   font-family: 'PT Sans', sans-serif;
   font-size: 14px;
-  background-color: #000;
+  background-color:  black;
   height: 100%;
   margin: 0;
   overflow: hidden;
@@ -31,6 +31,11 @@ body {
   fill: none;
   stroke: #ef0d0c;
   stroke-width: 1.5px;
+}
+
+.area {
+	fill: #5e7044;
+	opacity: 0.4;
 }
 
 .graphPanelVert {
